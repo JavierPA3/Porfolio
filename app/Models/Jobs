@@ -1,0 +1,107 @@
+<?php 
+namespace App\Models;
+
+require_once __DIR__ . '/DBAbstractModel.php';
+
+class Jobs extends DBAsbtractModel
+{
+    private static $instance;
+    private $name;
+    private $visible;
+    private $skill_category;
+    private $user_id;
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+    }
+
+    public function setSkillCategory($skill_category)
+    {
+        $this->skill_category = $skill_category;
+    }
+
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
+    }
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new Jobs();
+        }
+        return self::$instance;
+    }
+
+    public function get()
+    {
+        $this->query = "SELECT * FROM jobs";
+        $this->get_results_from_query();
+        return $this->rows ?? null;
+    }
+
+    public function set()
+    {
+        $this->query = "INSERT INTO jobs (name, visible, skill_category, user_id) 
+                        VALUES (:name, :visible, :skill_category, :user_id)";
+
+        // Set the query parameters
+        $this->params = [
+            ':name' => $this->name,
+            ':visible' => $this->visible,
+            ':skill_category' => $this->skill_category,
+            ':user_id' => $this->user_id
+        ];
+
+        // Output the query and parameters for debugging
+        echo "Query: {$this->query}\n";
+        echo "Params: " . print_r($this->params, true) . "\n";
+
+        // Use direct parameter binding in the query execution
+        $this->get_results_from_query();
+    }
+
+    public function edit()
+    {
+        $this->query = "UPDATE jobs 
+                        SET name = :name, visible = :visible, skill_category = :skill_category, user_id = :user_id 
+                        WHERE id = :id";
+
+        // Set the query parameters
+        $this->params = [
+            ':name' => $this->name,
+            ':visible' => $this->visible,
+            ':skill_category' => $this->skill_category,
+            ':user_id' => $this->user_id,
+            ':id' => $this->id,
+        ];
+
+        // Output the query and parameters for debugging
+        echo "Query: {$this->query}\n";
+        echo "Params: " . print_r($this->params, true) . "\n";
+
+        // Use direct parameter binding in the query execution
+        $this->get_results_from_query();
+    }
+
+    public function delete()
+    {
+        $this->query = "DELETE FROM jobs WHERE id = :id";
+
+        // Set the query parameters
+        $this->params = [':id' => $this->id];
+
+        // Output the query and parameters for debugging
+        echo "Query: {$this->query}\n";
+        echo "Params: " . print_r($this->params, true) . "\n";
+
+        // Use direct parameter binding in the query execution
+        $this->get_results_from_query();
+    }
+}
